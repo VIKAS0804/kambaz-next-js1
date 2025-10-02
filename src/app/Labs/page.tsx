@@ -3,10 +3,10 @@ export default function Labs() {
   return (
     <div id="wd-labs">
       <h1>Labs</h1>
-      <p>Name: Darshan Ravindra Konnur</p>
-      <p>Section: CS 5610 Fall 2025 (Online) Section 05</p>
+      <p>Name: VIKAS NERIYANURU</p>
+      <p>Section: Fall 2025 Semester Section Number: 05</p>
       <a
-        href="https://github.com/darshanrk18/kambaz-next-js.git"
+        href="https://github.com/VIKAS0804/kambaz-next-js1.git"
         target="_blank"
       >
         My Github Repo

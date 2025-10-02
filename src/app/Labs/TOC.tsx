@@ -30,7 +30,7 @@ export default function TOC() {
       </NavItem>
       <NavItem>
         <NavLink
-          href="https://github.com/darshanrk18"
+          href="https://github.com/VIKAS0804/"
           id="wd-github"
           target="_blank"
         >
