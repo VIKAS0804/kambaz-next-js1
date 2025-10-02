@@ -13,32 +13,13 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1234/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*kxBdslclglg4zgCw0NMIIA.png" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://www.designgurus.io/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fdownload%2Fstorage%2Fv1%2Fb%2Fdesigngurus-prod.appspot.com%2Fo%2Farticle%252F68091263fad0e4ab527553c5%252Fimg%3A6f4442-6004-3fe-c4ab-6f643a7301a.jpg%3Fgeneration%3D1745510097916734%26alt%3Dmedia&w=1920&q=75&dpl=dpl_5EoYPHoTV7Fumw1RynfV1f6MDNri" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
-                    CS1234 React JS
+                    CS 7800 Distributed Scalable Systems
                   </CardTitle>
                   <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                    Full Stack software developer
-                  </CardText>
-                  <div className="mt-auto">
-                    <Button variant="primary">Go</Button>
-                  </div>
-                </CardBody>
-              </Link>
-            </Card>
-          </Col>
-
-          <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
-            <Card style={{ width: "300px", height: "400px" }}>
-              <Link href="/Courses/1235/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
-                <CardBody className="d-flex flex-column">
-                  <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
-                    CS5610 Web Development
-                  </CardTitle>
-                  <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                    Full stack web developer
+                    Learning Distributed systems concepts and scalability
                   </CardText>
                   <div className="mt-auto">
                     <Button variant="primary">Go</Button>
@@ -51,13 +32,32 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1236/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="https://deen3evddmddt.cloudfront.net/uploads/content-images/what-is-dsa.webp" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*UtaFiHKifClmJ_z2rB9fXA.jpeg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
-                    CS3843 Data Structures and Algorithms
+                    CS5800 Algorithms
                   </CardTitle>
                   <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                    Learn about data structures and algorithms
+                    Algorithms design and analysis
+                  </CardText>
+                  <div className="mt-auto">
+                    <Button variant="primary">Go</Button>
+                  </div>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+
+                    <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
+            <Card style={{ width: "300px", height: "400px" }}>
+              <Link href="/Courses/1235/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
+                <CardImg variant="top" src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardBody className="d-flex flex-column">
+                  <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
+                    CS5610 Web Development
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
+                    Full stack web developer
                   </CardText>
                   <div className="mt-auto">
                     <Button variant="primary">Go</Button>
@@ -108,13 +108,13 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1239/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="https://theforage.wpengine.com/wp-content/uploads/2022/12/what-is-cybersecurity-1024x631.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://www.mouser.com/blog/Portals/11/Dongang_Machine%20Learning_Theme%20Image-min_1.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
-                    CS3500 Cybersecurity
+                    CS7410 Deep Learning
                   </CardTitle>
                   <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                    Security principles and ethical hacking
+                    Dive into deep neural networks and applications
                   </CardText>
                   <div className="mt-auto">
                     <Button variant="primary">Go</Button>
@@ -146,13 +146,13 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1241/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="https://online.jwu.edu/wp-content/uploads/2024/03/JWU_March_Applications_AI.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://djitz.com/wp-content/uploads/PDP_textbook.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
-                    CS4100 Artificial Intelligence
+                    CS5010 Programming Design Paradigm
                   </CardTitle>
                   <CardText className="wd-dashboard-course-description flex-grow-1" style={{ fontSize: "0.9rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
-                    Explore neural networks, search, and reasoning
+                    Programming concepts and problem solving 
                   </CardText>
                   <div className="mt-auto">
                     <Button variant="primary">Go</Button>
