@@ -13,7 +13,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1234/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/reactjs.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*kxBdslclglg4zgCw0NMIIA.png" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS1234 React JS
@@ -32,7 +32,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1235/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/webdev.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221222184908/web-development1.png" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS5610 Web Development
@@ -51,7 +51,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1236/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/dsa.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://deen3evddmddt.cloudfront.net/uploads/content-images/what-is-dsa.webp" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS3843 Data Structures and Algorithms
@@ -70,7 +70,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1237/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/machinelearning.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://s44783.pcdn.co/in/wp-content/uploads/sites/3/2023/03/types-of-machine-learning-768x511.jpg.webp" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS4700 Machine Learning
@@ -89,7 +89,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1238/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/databases.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://media.licdn.com/dms/image/v2/D5612AQE4aOimenblxw/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1710407600740?e=2147483647&v=beta&t=dxH2Zay53Ctvw9bDLIqXLLGP__mPA9YevVUmNgktw9E" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS3200 Database Systems
@@ -108,7 +108,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1239/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/cybersecurity.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://theforage.wpengine.com/wp-content/uploads/2022/12/what-is-cybersecurity-1024x631.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS3500 Cybersecurity
@@ -127,7 +127,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1240/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/cloudcomputing.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://platinumdatarecovery.com/wp-content/uploads/2023/05/cloud-computing-diagram.webp" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS4200 Cloud Computing
@@ -146,7 +146,7 @@ export default function Dashboard() {
           <Col xl={3} lg={4} md={6} sm={12} className="wd-dashboard-course d-flex">
             <Card style={{ width: "300px", height: "400px" }}>
               <Link href="/Courses/1241/Home" className="wd-dashboard-course-link text-decoration-none text-dark h-100 d-flex flex-column">
-                <CardImg variant="top" src="/images/ai.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
+                <CardImg variant="top" src="https://online.jwu.edu/wp-content/uploads/2024/03/JWU_March_Applications_AI.jpg" style={{ height: "160px", objectFit: "cover", flexShrink: 0 }} />
                 <CardBody className="d-flex flex-column">
                   <CardTitle className="wd-dashboard-course-title" style={{ fontSize: "1rem", minHeight: "50px", display: "flex", alignItems: "center" }}>
                     CS4100 Artificial Intelligence

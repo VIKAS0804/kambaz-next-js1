@@ -367,7 +367,7 @@ export default function Lab1() {
         to get dummy text
         <br />
         <a
-          href="https://github.com/VIKAS0804/kambaz-next-js"
+          href="https://github.com/VIKAS0804/kambaz-next-js1"
           id="wd-github"
           target="_blank"
           rel="noopener noreferrer"
