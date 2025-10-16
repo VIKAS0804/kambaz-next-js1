@@ -12,71 +12,34 @@ export default function Lab3() {
       <ConditionalOutputInline />
 <LegacyFunctions />
 <ArrowFunctions />
-{/* @ts-expect-error Server Component import ok */}
 <ImpliedReturn />
-{/* @ts-expect-error Server Component import ok */}
 <TemplateLiterals />
-{/* 3.4 Arrays & JSON */}
-{/* @ts-expect-error Server Component import ok */}
 <SimpleArrays />
-{/* @ts-expect-error Server Component import ok */}
 <ArrayIndexAndLength />
-{/* @ts-expect-error Server Component import ok */}
 <AddingAndRemovingToFromArrays />
-{/* 3.4 Arrays */}
-{/* @ts-expect-error Server Component import ok */}
 <ForLoops />
-{/* @ts-expect-error Server Component import ok */}
 <MapFunction />
-{/* @ts-expect-error Server Component import ok */}
 <FindFunction />
-{/* @ts-expect-error Server Component import ok */}
 <FindIndex />
-{/* @ts-expect-error Server Component import ok */}
 <FilterFunction />
-{/* @ts-expect-error Server Component import ok */}
 <JsonStringify />
-{/* @ts-expect-error Server Component import ok */}
 <House />
-{/* @ts-expect-error Server Component import ok */}
 <Spreader />
-{/* 3.4.12 Destructing */}
-{/* @ts-expect-error Server Component import ok */}
 <Destructing />
-
-{/* 3.4.13 Function Destructing */}
-{/* @ts-expect-error Server Component import ok */}
 <FunctionDestructing />
-
-{/* 3.4.14 Destructing Imports */}
-{/* @ts-expect-error Server Component import ok */}
 <DestructingImports />
-{/* 3.5 Dynamic Styling */}
-{/* @ts-expect-error Server Component import ok */}
 <Classes />
-{/* @ts-expect-error Server Component import ok */}
 <Styles />
-{/* 3.6 Parameterizing Components (props) */}
-{/* @ts-expect-error Server Component import ok */}
 <Add a={3} b={4} />
-
-{/* 3.6.1 Child Components */}
 <h4>Square of 4</h4>
-{/* @ts-expect-error Server Component import ok */}
 <Square>4</Square>
 <hr />
-{/* @ts-expect-error Server Component import ok */}
 <Highlight>
   Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum,
   saepe totam vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi
   maiores, provident voluptates.
 </Highlight>
-
-{/* 3.6.3 Path parameters */}
-{/* @ts-expect-error Server Component import ok */}
 <PathParameters />
-{/* 3.7 Rendering a Data Structure */}
-{/* @ts-expect-error Server Component import ok */}
 <TodoList />
 
     </div>
