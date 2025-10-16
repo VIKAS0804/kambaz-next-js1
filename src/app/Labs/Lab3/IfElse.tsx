@@ -1,5 +1,6 @@
 export default function IfElse() {
-  let true1 = true,
+  // eslint-disable-next-line prefer-const
+  const true1 = true,
     false1 = false;
 
   return (
