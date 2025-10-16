@@ -1,0 +1,9 @@
+[
+  { "_id": "123", "firstName": "Alice", "lastName": "Wong", "loginId": "wong.al", "section": "S1", "role": "Student", "lastActivity": "Oct 10", "totalActivity": "3h" },
+  { "_id": "234", "firstName": "Bob", "lastName": "Smith", "loginId": "smith.bo", "section": "S1", "role": "TA", "lastActivity": "Oct 12", "totalActivity": "5h" },
+  { "_id": "345", "firstName": "Cathy", "lastName": "Lee", "loginId": "lee.ca", "section": "S2", "role": "Student", "lastActivity": "Oct 13", "totalActivity": "2h" },
+  { "_id": "456", "firstName": "Dan", "lastName": "Patel", "loginId": "patel.da", "section": "S2", "role": "Student", "lastActivity": "Oct 11", "totalActivity": "4h" },
+  { "_id": "567", "firstName": "Eva", "lastName": "Ng", "loginId": "ng.ev", "section": "S3", "role": "Faculty", "lastActivity": "Oct 14", "totalActivity": "7h" },
+  { "_id": "789", "firstName": "Fred", "lastName": "Diaz", "loginId": "diaz.fr", "section": "S1", "role": "Student", "lastActivity": "Oct 09", "totalActivity": "1h" },
+  { "_id": "890", "firstName": "Gina", "lastName": "Roy", "loginId": "roy.gi", "section": "S3", "role": "Student", "lastActivity": "Oct 08", "totalActivity": "1h" }
+]

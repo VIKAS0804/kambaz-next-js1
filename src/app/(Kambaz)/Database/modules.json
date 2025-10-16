@@ -1,0 +1,58 @@
+[
+  {
+    "_id": "m1",
+    "course": "RS101",
+    "name": "Intro to React",
+    "lessons": [{ "name": "JSX" }, { "name": "Components" }, { "name": "Props" }]
+  },
+  {
+    "_id": "m2",
+    "course": "RS101",
+    "name": "State & Effects",
+    "lessons": [{ "name": "useState" }, { "name": "useEffect" }]
+  },
+  {
+    "_id": "m3",
+    "course": "RS101",
+    "name": "Routing",
+    "lessons": [{ "name": "App Router" }, { "name": "Dynamic Params" }]
+  },
+
+  {
+    "_id": "m4",
+    "course": "WD201",
+    "name": "Layouts",
+    "lessons": [{ "name": "Shared UI" }, { "name": "Nested Routes" }]
+  },
+  {
+    "_id": "m5",
+    "course": "WD201",
+    "name": "Data Fetching",
+    "lessons": [{ "name": "Server Components" }, { "name": "Client Components" }]
+  },
+  {
+    "_id": "m6",
+    "course": "WD201",
+    "name": "Styling",
+    "lessons": [{ "name": "Bootstrap" }, { "name": "Tailwind" }]
+  },
+
+  {
+    "_id": "m7",
+    "course": "JS301",
+    "name": "Advanced JS",
+    "lessons": [{ "name": "Closures" }, { "name": "Destructuring" }]
+  },
+  {
+    "_id": "m8",
+    "course": "JS301",
+    "name": "Tooling",
+    "lessons": [{ "name": "ESLint" }, { "name": "Prettier" }]
+  },
+  {
+    "_id": "m9",
+    "course": "JS301",
+    "name": "Testing",
+    "lessons": [{ "name": "Vitest" }, { "name": "RTL" }]
+  }
+]

@@ -1,0 +1,9 @@
+[
+  { "_id": "A1", "course": "RS101", "title": "A1: React Basics", "due": "2025-10-20", "points": 100, "description": "Build basic components." },
+  { "_id": "A2", "course": "RS101", "title": "A2: Routing", "due": "2025-10-27", "points": 100, "description": "Dynamic routes & params." },
+
+  { "_id": "A3", "course": "WD201", "title": "A3: Data Fetching", "due": "2025-10-22", "points": 100, "description": "Server & Client components." },
+  { "_id": "A4", "course": "WD201", "title": "A4: Styling", "due": "2025-10-29", "points": 100, "description": "Bootstrap & Tailwind." },
+
+  { "_id": "A5", "course": "JS301", "title": "A5: Advanced JS", "due": "2025-10-23", "points": 100, "description": "Destructuring, closures." }
+]

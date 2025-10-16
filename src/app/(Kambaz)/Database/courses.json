@@ -1,0 +1,5 @@
+[
+  { "_id": "RS101", "name": "React Spring 101", "description": "Intro to React + Next.js" },
+  { "_id": "WD201", "name": "Web Dev 201", "description": "Routing, data, UI patterns" },
+  { "_id": "JS301", "name": "JavaScript 301", "description": "Advanced JS & tooling" }
+]
