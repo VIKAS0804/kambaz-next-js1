@@ -8,9 +8,15 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import * as db from "../../../Database";
 
 export default function Assignments() {
-  const { cid, aid } = useParams();
+  const { cid } = useParams();
+  const assignments = db.assignments;
+
+  const courseAssignments = assignments.filter(
+    (assignment) => assignment.course === cid
+  );
 
   return (
     <div>
@@ -32,86 +38,38 @@ export default function Assignments() {
           </div>
           
           <ListGroup className="wd-assignments rounded-0">
-            <ListGroupItem className="wd-assignment p-3 ps-1 d-flex align-items-center">
-              <BsGripVertical className="me-3 fs-4" />
-              <FaFileLines className="me-3 fs-4 text-success" />
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <Link href={`/Courses/${cid}/Assignments/${aid}`}
-                      className="wd-assignment-link"
-                    >
-                    <strong className="text-dark">A1</strong>
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | 
-                      <span> Not available until May 6 at 12:00am</span>
+            {courseAssignments.map((assignment) => (
+              <ListGroupItem 
+                key={assignment._id} 
+                className="wd-assignment p-3 ps-1 d-flex align-items-center"
+              >
+                <BsGripVertical className="me-3 fs-4" />
+                <FaFileLines className="me-3 fs-4 text-success" />
+                <div className="flex-grow-1">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <Link 
+                        href={`/Courses/${cid}/Assignments/${assignment._id}`}
+                        className="wd-assignment-link text-decoration-none"
+                      >
+                        <strong className="text-dark">{assignment.title}</strong>
+                      </Link>
+                      <div className="text-muted small">
+                        <span className="text-danger">Multiple Modules</span> | 
+                        <span> Not available until {new Date(assignment.available).toLocaleDateString()}</span>
+                      </div>
+                      <div className="text-muted small">
+                        <strong>Due</strong> {new Date(assignment.due).toLocaleDateString()} | {assignment.points} pts
+                      </div>
                     </div>
-                    <div className="text-muted small">
-                      <strong>Due</strong> May 13 at 11:59pm | 100 pts
+                    <div className="d-flex align-items-center">
+                      <IoCheckmarkCircle className="text-success fs-4 me-2" />
+                      <BsThreeDotsVertical />
                     </div>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <IoCheckmarkCircle className="text-success fs-4 me-2" />
-                    <BsThreeDotsVertical />
                   </div>
                 </div>
-              </div>
-            </ListGroupItem>
-            
-            <ListGroupItem className="wd-assignment p-3 ps-1 d-flex align-items-center">
-              <BsGripVertical className="me-3 fs-4 text-muted" />
-              <FaFileLines className="me-3 fs-4 text-success" />
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <Link href={`/Courses/${cid}/Assignments/${aid}`}
-                      className="wd-assignment-link"
-                    >
-                    <strong className="text-dark">A2</strong>
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | 
-                      <span> Not available until May 13 at 12:00am</span>
-                    </div>
-                    <div className="text-muted small">
-                      <strong>Due</strong> May 20 at 11:59pm | 100 pts
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <IoCheckmarkCircle className="text-success fs-4 me-2" />
-                    <BsThreeDotsVertical />
-                  </div>
-                </div>
-              </div>
-            </ListGroupItem>
-            
-            <ListGroupItem className="wd-assignment p-3 ps-1 d-flex align-items-center">
-              <BsGripVertical className="me-3 fs-4 text-muted" />
-              <FaFileLines className="me-3 fs-4 text-success" />
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <Link href={`/Courses/${cid}/Assignments/${aid}`}
-                      className="wd-assignment-link"
-                    >
-                    <strong className="text-dark">A3</strong>
-                    </Link>
-                    <div className="text-muted small">
-                      <span className="text-danger">Multiple Modules</span> | 
-                      <span> Not available until May 20 at 12:00am</span>
-                    </div>
-                    <div className="text-muted small">
-                      <strong>Due</strong> May 27 at 11:59pm | 100 pts
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <IoCheckmarkCircle className="text-success fs-4 me-2" />
-                    <BsThreeDotsVertical />
-                  </div>
-                </div>
-              </div>
-            </ListGroupItem>
+              </ListGroupItem>
+            ))}
           </ListGroup>
         </ListGroupItem>
       </ListGroup>
