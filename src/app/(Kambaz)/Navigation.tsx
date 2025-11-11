@@ -7,13 +7,19 @@ import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
+  const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    setCurrentPath(pathname);
+  }, [pathname]);
   
   const links = [
     { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard },
-    { label: "Courses", path: "/Dashboard", icon: LiaBookSolid },
+    { label: "Courses", path: "/Courses", icon: LiaBookSolid },
     { label: "Calendar", path: "/Calendar", icon: IoCalendarOutline },
     { label: "Inbox", path: "/Inbox", icon: FaInbox },
     { label: "Labs", path: "/Labs", icon: LiaCogSolid },
@@ -38,13 +44,11 @@ export default function KambazNavigation() {
       <ListGroupItem
         as={Link}
         href="/Account"
-        className={`text-center border-0 bg-black ${
-          pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"
+        className={`text-center border-0 ${
+          currentPath.includes("Account") ? "bg-white text-danger" : "bg-black text-white"
         }`}
       >
-        <FaRegCircleUser
-          className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`}
-        />
+        <FaRegCircleUser className="fs-1" />
         <br />
         Account
       </ListGroupItem>
@@ -54,11 +58,11 @@ export default function KambazNavigation() {
           key={link.path}
           as={Link}
           href={link.path}
-          className={`bg-black text-center border-0 ${
-            pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"
+          className={`text-center border-0 ${
+            currentPath.includes(link.label) ? "bg-white text-danger" : "bg-black text-white"
           }`}
         >
-          {link.icon({ className: "fs-1 text-danger" })}
+          <link.icon className="fs-1" />
           <br />
           {link.label}
         </ListGroupItem>
