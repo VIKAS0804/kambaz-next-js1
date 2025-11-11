@@ -1,19 +1,99 @@
+"use client";
 import Link from "next/link";
-import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button } from "react-bootstrap";
+import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
+import { useState } from "react";
+import { RootState, Course } from "../types";
 import * as db from "../Database";
 
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
+
 export default function Dashboard() {
-  const courses = db.courses;
+  const { courses } = useSelector((state: RootState) => state.coursesReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const enrollments = db.enrollments as Enrollment[];
+  const dispatch = useDispatch();
   
+  const [course, setCourse] = useState<Course>({
+    _id: "",
+    name: "New Course",
+    number: "New Number",
+    startDate: "2023-09-10",
+    endDate: "2023-12-15",
+    department: "New Department",
+    credits: 4,
+    description: "New Description",
+    image: "/images/reactjs.jpg"
+  });
+
+  const addNewCourseHandler = () => {
+    dispatch(addNewCourse(course));
+  };
+
+  const deleteCourseHandler = (courseId: string) => {
+    dispatch(deleteCourse(courseId));
+  };
+
+  const updateCourseHandler = () => {
+    dispatch(updateCourse(course));
+  };
+
+  // Filter courses based on user enrollment
+  const enrolledCourses = courses.filter((course) =>
+    enrollments.some(
+      (enrollment) =>
+        enrollment.user === currentUser?._id &&
+        enrollment.course === course._id
+    )
+  );
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
+      
+      <h5>
+        New Course
+        <Button 
+          className="btn btn-primary float-end"
+          onClick={addNewCourseHandler}
+          id="wd-add-new-course-click"
+        >
+          Add
+        </Button>
+        <Button 
+          className="btn btn-warning float-end me-2"
+          onClick={updateCourseHandler}
+          id="wd-update-course-click"
+        >
+          Update
+        </Button>
+      </h5>
+      
+      <FormControl 
+        value={course.name} 
+        className="mb-2"
+        onChange={(e) => setCourse({ ...course, name: e.target.value })}
+      />
+      <FormControl 
+        value={course.description} 
+        as="textarea"
+        rows={3}
+        onChange={(e) => setCourse({ ...course, description: e.target.value })}
+      />
       <hr />
+      
+      <h2 id="wd-dashboard-published">Published Courses ({enrolledCourses.length})</h2>
+      <hr />
+      
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses.map((course) => (
+          {enrolledCourses.map((course: Course) => (
             <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
               <Card>
                 <Link 
@@ -39,6 +119,29 @@ export default function Dashboard() {
                     <Button variant="primary">Go</Button>
                   </CardBody>
                 </Link>
+                
+                <CardBody>
+                  <Button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deleteCourseHandler(course._id);
+                    }}
+                    className="btn btn-danger float-end"
+                    id="wd-delete-course-click"
+                  >
+                    Delete
+                  </Button>
+                  <Button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCourse(course);
+                    }}
+                    className="btn btn-warning float-end me-2"
+                    id="wd-edit-course-click"
+                  >
+                    Edit
+                  </Button>
+                </CardBody>
               </Card>
             </Col>
           ))}
