@@ -5,12 +5,18 @@ export default function Signin() {
   return (
     <div id="wd-signin-screen">
       <h1>Sign in</h1>
-      <FormControl id="wd-username" placeholder="username" className="mb-2" />
+      <FormControl 
+        id="wd-username" 
+        placeholder="username" 
+        className="mb-2" 
+        defaultValue="alice"
+      />
       <FormControl
         id="wd-password"
         placeholder="password"
         type="password"
         className="mb-2"
+        defaultValue="123"
       />
       <Link
         id="wd-signin-btn"

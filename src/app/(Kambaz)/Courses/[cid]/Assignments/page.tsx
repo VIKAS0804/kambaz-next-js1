@@ -17,6 +17,7 @@ export default function Assignments() {
       <AssignmentsControls />
       <br />
       
+      {/* ASSIGNMENTS SECTION */}
       <ListGroup className="rounded-0" id="wd-assignments">
         <ListGroupItem className="p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
@@ -113,6 +114,57 @@ export default function Assignments() {
               </div>
             </ListGroupItem>
           </ListGroup>
+        </ListGroupItem>
+      </ListGroup>
+
+      {/* QUIZZES SECTION */}
+      <ListGroup className="rounded-0" id="wd-quizzes">
+        <ListGroupItem className="p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <strong>QUIZZES</strong>
+            </div>
+            <div className="d-flex align-items-center">
+              <span className="me-3 text-muted">10% of Total</span>
+              <button className="btn btn-outline-secondary btn-sm me-2">+</button>
+              <BsThreeDotsVertical />
+            </div>
+          </div>
+        </ListGroupItem>
+      </ListGroup>
+
+      {/* EXAMS SECTION */}
+      <ListGroup className="rounded-0" id="wd-exams">
+        <ListGroupItem className="p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <strong>EXAMS</strong>
+            </div>
+            <div className="d-flex align-items-center">
+              <span className="me-3 text-muted">20% of Total</span>
+              <button className="btn btn-outline-secondary btn-sm me-2">+</button>
+              <BsThreeDotsVertical />
+            </div>
+          </div>
+        </ListGroupItem>
+      </ListGroup>
+
+      {/* PROJECT SECTION */}
+      <ListGroup className="rounded-0" id="wd-project">
+        <ListGroupItem className="p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <strong>PROJECT</strong>
+            </div>
+            <div className="d-flex align-items-center">
+              <span className="me-3 text-muted">30% of Total</span>
+              <button className="btn btn-outline-secondary btn-sm me-2">+</button>
+              <BsThreeDotsVertical />
+            </div>
+          </div>
         </ListGroupItem>
       </ListGroup>
     </div>
