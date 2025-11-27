@@ -1,9 +1,14 @@
+"use client";
+
 import { FaPlus } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Form, InputGroup, Button } from "react-bootstrap";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
+import { useRouter, useParams } from "next/navigation";
 
 export default function AssignmentsControls() {
+  const router = useRouter();
+  const { cid } = useParams();
   return (
     <div className="d-flex justify-content-between align-items-center mb-4">
       <div className="d-flex align-items-center flex-grow-1 me-3">
@@ -24,7 +29,11 @@ export default function AssignmentsControls() {
           <FaPlus className="me-1" />
           Group
         </Button>
-        <Button variant="danger" size="lg">
+        <Button 
+          variant="danger" 
+          size="lg"
+          onClick={() => router.push(`/Courses/${cid}/Assignments/new`)}
+        >
           <FaPlus className="me-1" />
           Assignment
         </Button>
