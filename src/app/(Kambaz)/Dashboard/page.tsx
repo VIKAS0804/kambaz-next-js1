@@ -3,9 +3,10 @@ import Link from "next/link";
 import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
+import { addEnrollment } from "../Enrollments/reducer";
 import { useState } from "react";
 import { RootState, Course } from "../types";
-import * as db from "../Database";
+import { v4 as uuidv4 } from "uuid";
 
 interface Enrollment {
   _id: string;
@@ -16,10 +17,10 @@ interface Enrollment {
 export default function Dashboard() {
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const enrollments = db.enrollments as Enrollment[];
+  const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
   const dispatch = useDispatch();
   
-  const [course, setCourse] = useState<Course>({
+  const initialCourseState: Course = {
     _id: "",
     name: "New Course",
     number: "New Number",
@@ -29,10 +30,32 @@ export default function Dashboard() {
     credits: 4,
     description: "New Description",
     image: "/images/reactjs.jpg"
-  });
+  };
+
+  const [course, setCourse] = useState<Course>(initialCourseState);
 
   const addNewCourseHandler = () => {
-    dispatch(addNewCourse(course));
+    if (!currentUser?._id) {
+      return;
+    }
+    
+    // Generate a UUID for the new course (same way the reducer does)
+    const newCourseId = uuidv4();
+    
+    // Dispatch addNewCourse action with the generated ID
+    dispatch(addNewCourse({ ...course, _id: newCourseId }));
+    
+    // Create enrollment for the current user
+    const newEnrollment: Enrollment = {
+      _id: `E${Date.now()}`,
+      user: currentUser._id,
+      course: newCourseId,
+    };
+    
+    dispatch(addEnrollment(newEnrollment));
+    
+    // Reset the course form to initial values
+    setCourse(initialCourseState);
   };
 
   const deleteCourseHandler = (courseId: string) => {
