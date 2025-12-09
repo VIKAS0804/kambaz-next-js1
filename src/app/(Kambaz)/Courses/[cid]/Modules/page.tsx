@@ -35,14 +35,17 @@ interface RootState {
 
 export default function Modules() {
   const { cid } = useParams();
+  console.log("Modules component - cid from useParams():", cid);
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
   const dispatch = useDispatch();
   const [moduleName, setModuleName] = useState("");
 
   useEffect(() => {
+    console.log("useEffect running - fetching modules for courseId:", cid);
     const fetchModules = async () => {
       try {
         const fetchedModules = await client.findModulesForCourse(cid as string);
+        console.log("Fetched modules result:", fetchedModules);
         dispatch(setModules(fetchedModules));
       } catch (error) {
         console.error("Error fetching modules:", error);
@@ -65,7 +68,7 @@ export default function Modules() {
 
   const handleDeleteModule = async (moduleId: string) => {
     try {
-      await client.deleteModule(moduleId);
+      await client.deleteModule(cid as string, moduleId);
       dispatch(deleteModule(moduleId));
     } catch (error) {
       console.error("Error deleting module:", error);
@@ -79,7 +82,7 @@ export default function Modules() {
   const handleFinishEditing = async (module: Module) => {
     try {
       const updatedModule = { ...module, editing: false };
-      await client.updateModule(updatedModule);
+      await client.updateModule(cid as string, updatedModule);
       dispatch(updateModule(updatedModule));
     } catch (error) {
       console.error("Error finishing edit:", error);
@@ -95,9 +98,7 @@ export default function Modules() {
       />
       <br /><br /><br /><br />
       <ListGroup className="rounded-0" id="wd-modules">
-        {modules
-          .filter((module) => module.course === cid)
-          .map((module) => (
+        {modules.map((module) => (
             <ListGroupItem key={module._id} className="wd-module p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary">
                 <BsGripVertical className="me-2 fs-3" />

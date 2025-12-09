@@ -8,8 +8,6 @@ const COURSES_API = `${HTTP_SERVER}/api/courses`;
 
 const ASSIGNMENTS_API = `${HTTP_SERVER}/api/assignments`;
 
-const MODULES_API = `${HTTP_SERVER}/api/modules`;
-
 const USERS_API = `${HTTP_SERVER}/api/users`;
 
 // Course functions
@@ -93,17 +91,17 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
   return response.data;
 };
 
-export const updateModule = async (module: any) => {
+export const updateModule = async (courseId: string, module: any) => {
   const response = await axiosWithCredentials.put(
-    `${MODULES_API}/${module._id}`,
+    `${COURSES_API}/${courseId}/modules/${module._id}`,
     module
   );
   return response.data;
 };
 
-export const deleteModule = async (moduleId: string) => {
+export const deleteModule = async (courseId: string, moduleId: string) => {
   const response = await axiosWithCredentials.delete(
-    `${MODULES_API}/${moduleId}`
+    `${COURSES_API}/${courseId}/modules/${moduleId}`
   );
   return response.data;
 };
