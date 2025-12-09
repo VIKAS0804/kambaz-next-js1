@@ -1,3 +1,4 @@
+"use client";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Modal, FormControl } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";

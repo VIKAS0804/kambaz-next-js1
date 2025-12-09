@@ -6,17 +6,25 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaFileLines } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaTrash } from "react-icons/fa";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import * as db from "../../../Database";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../store";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  const dispatch = useDispatch();
 
   const courseAssignments = assignments.filter(
     (assignment) => assignment.course === cid
   );
+
+  const deleteAssignmentHandler = (assignmentId: string) => {
+    dispatch(deleteAssignment(assignmentId));
+  };
 
   return (
     <div>
@@ -63,6 +71,11 @@ export default function Assignments() {
                       </div>
                     </div>
                     <div className="d-flex align-items-center">
+                      <FaTrash 
+                        className="text-danger me-2 mb-1" 
+                        onClick={() => deleteAssignmentHandler(assignment._id)}
+                        style={{ cursor: "pointer" }}
+                      />
                       <IoCheckmarkCircle className="text-success fs-4 me-2" />
                       <BsThreeDotsVertical />
                     </div>

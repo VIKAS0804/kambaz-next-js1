@@ -53,4 +53,11 @@ export interface RootState {
   modulesReducer: {
     modules: Module[];
   };
+  enrollmentsReducer: {
+    enrollments: {
+      _id: string;
+      user: string;
+      course: string;
+    }[];
+  };
 }

@@ -1,15 +1,53 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import Link from "next/link";
-import * as db from "../../../../Database";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../../store";
+import { addAssignment, updateAssignment } from "../reducer";
+
+interface Assignment {
+  _id: string;
+  title: string;
+  description: string;
+  course: string;
+  due: string;
+  available: string;
+  points: number;
+}
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
-  const assignment = db.assignments.find((a) => a._id === aid);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  
+  const existingAssignment = assignments.find((a) => a._id === aid);
+  
+  const [assignment, setAssignment] = useState<Omit<Assignment, "_id">>(() => {
+    if (aid === "new") {
+      return {
+        title: "",
+        description: "",
+        course: cid as string,
+        due: "",
+        available: "",
+        points: 100,
+      };
+    }
+    return existingAssignment || {
+      title: "",
+      description: "",
+      course: cid as string,
+      due: "",
+      available: "",
+      points: 100,
+    };
+  });
 
-  if (!assignment) {
+  if (aid !== "new" && !existingAssignment) {
     return <div className="p-4">Assignment not found</div>;
   }
 
@@ -21,7 +59,8 @@ export default function AssignmentEditor() {
         <Form.Control 
           id="wd-name" 
           type="text" 
-          defaultValue={assignment.title}
+          value={assignment.title}
+          onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
         />
       </div>
 
@@ -32,7 +71,8 @@ export default function AssignmentEditor() {
           as="textarea"
           id="wd-description"
           rows={5}
-          defaultValue={assignment.description}
+          value={assignment.description}
+          onChange={(e) => setAssignment({ ...assignment, description: e.target.value })}
         />
       </div>
 
@@ -45,7 +85,8 @@ export default function AssignmentEditor() {
           <Form.Control 
             id="wd-points" 
             type="number" 
-            defaultValue={assignment.points}
+            value={assignment.points}
+            onChange={(e) => setAssignment({ ...assignment, points: parseInt(e.target.value) || 0 })}
           />
         </Col>
       </Row>
@@ -134,7 +175,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-due-date" 
-                    defaultValue={assignment.due}
+                    value={assignment.due}
+                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
                   />
                 </div>
               </Col>
@@ -149,7 +191,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-from" 
-                    defaultValue={assignment.available}
+                    value={assignment.available}
+                    onChange={(e) => setAssignment({ ...assignment, available: e.target.value })}
                   />
                 </div>
               </Col>
@@ -161,7 +204,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-until" 
-                    defaultValue={assignment.due}
+                    value={assignment.due}
+                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
                   />
                 </div>
               </Col>
@@ -178,11 +222,19 @@ export default function AssignmentEditor() {
             Cancel
           </Button>
         </Link>
-        <Link href={`/Courses/${cid}/Assignments`}>
-          <Button variant="danger">
-            Save
-          </Button>
-        </Link>
+        <Button 
+          variant="danger"
+          onClick={() => {
+            if (aid === "new") {
+              dispatch(addAssignment(assignment));
+            } else {
+              dispatch(updateAssignment({ ...assignment, _id: aid as string }));
+            }
+            router.push(`/Courses/${cid}/Assignments`);
+          }}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );
