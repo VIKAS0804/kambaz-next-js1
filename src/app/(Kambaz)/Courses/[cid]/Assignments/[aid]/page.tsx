@@ -1,16 +1,107 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import Link from "next/link";
-import * as db from "../../../../Database";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../../store";
+import { addAssignment, updateAssignment } from "../reducer";
+import * as client from "../../../client";
+
+interface Assignment {
+  _id: string;
+  title: string;
+  description: string;
+  course: string;
+  due: string;
+  available: string;
+  points: number;
+}
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
-  const assignment = db.assignments.find((a) => a._id === aid);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+  
+  const [assignment, setAssignment] = useState<Omit<Assignment, "_id">>(() => {
+    if (aid === "new") {
+      return {
+        title: "",
+        description: "",
+        course: cid as string,
+        due: "",
+        available: "",
+        points: 100,
+      };
+    }
+    const existingAssignment = assignments.find((a) => a._id === aid);
+    if (existingAssignment) {
+      const { _id, ...assignmentWithoutId } = existingAssignment;
+      return assignmentWithoutId;
+    }
+    return {
+      title: "",
+      description: "",
+      course: cid as string,
+      due: "",
+      available: "",
+      points: 100,
+    };
+  });
 
-  if (!assignment) {
-    return <div className="p-4">Assignment not found</div>;
+  const [loading, setLoading] = useState(aid !== "new");
+
+  useEffect(() => {
+    const fetchAssignment = async () => {
+      if (aid === "new") {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const courseAssignments = await client.findAssignmentsForCourse(cid as string);
+        const fetchedAssignment = courseAssignments.find((a: Assignment) => a._id === aid);
+        if (fetchedAssignment) {
+          const { _id, ...assignmentWithoutId } = fetchedAssignment;
+          setAssignment(assignmentWithoutId);
+        }
+      } catch (error) {
+        console.error("Error fetching assignment:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssignment();
+  }, [aid, cid]);
+
+  const handleSave = async () => {
+    try {
+      if (aid === "new") {
+        const createdAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(createdAssignment));
+      } else {
+        const updatedAssignment = { ...assignment, _id: aid as string };
+        await client.updateAssignment(aid as string, assignment);
+        dispatch(updateAssignment(updatedAssignment));
+      }
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+    }
+  };
+
+  if (loading) {
+    return <div className="p-4">Loading...</div>;
+  }
+
+  if (aid !== "new") {
+    const existingAssignment = assignments.find((a) => a._id === aid);
+    if (!existingAssignment && !loading) {
+      return <div className="p-4">Assignment not found</div>;
+    }
   }
 
   return (
@@ -21,7 +112,8 @@ export default function AssignmentEditor() {
         <Form.Control 
           id="wd-name" 
           type="text" 
-          defaultValue={assignment.title}
+          value={assignment.title}
+          onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
         />
       </div>
 
@@ -32,7 +124,8 @@ export default function AssignmentEditor() {
           as="textarea"
           id="wd-description"
           rows={5}
-          defaultValue={assignment.description}
+          value={assignment.description}
+          onChange={(e) => setAssignment({ ...assignment, description: e.target.value })}
         />
       </div>
 
@@ -45,7 +138,8 @@ export default function AssignmentEditor() {
           <Form.Control 
             id="wd-points" 
             type="number" 
-            defaultValue={assignment.points}
+            value={assignment.points}
+            onChange={(e) => setAssignment({ ...assignment, points: parseInt(e.target.value) || 0 })}
           />
         </Col>
       </Row>
@@ -134,7 +228,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-due-date" 
-                    defaultValue={assignment.due}
+                    value={assignment.due}
+                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
                   />
                 </div>
               </Col>
@@ -149,7 +244,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-from" 
-                    defaultValue={assignment.available}
+                    value={assignment.available}
+                    onChange={(e) => setAssignment({ ...assignment, available: e.target.value })}
                   />
                 </div>
               </Col>
@@ -161,7 +257,8 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-until" 
-                    defaultValue={assignment.due}
+                    value={assignment.due}
+                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
                   />
                 </div>
               </Col>
@@ -178,11 +275,12 @@ export default function AssignmentEditor() {
             Cancel
           </Button>
         </Link>
-        <Link href={`/Courses/${cid}/Assignments`}>
-          <Button variant="danger">
-            Save
-          </Button>
-        </Link>
+        <Button 
+          variant="danger"
+          onClick={handleSave}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

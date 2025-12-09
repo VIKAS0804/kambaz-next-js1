@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
-import { useState } from "react";
+import { addNewCourse, deleteCourse, updateCourse, setCourses } from "../Courses/reducer";
+import { addEnrollment } from "../Enrollments/reducer";
+import { useState, useEffect } from "react";
 import { RootState, Course } from "../types";
-import * as db from "../Database";
+import { v4 as uuidv4 } from "uuid";
+import * as client from "../Courses/client";
 
 interface Enrollment {
   _id: string;
@@ -16,10 +18,10 @@ interface Enrollment {
 export default function Dashboard() {
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const enrollments = db.enrollments as Enrollment[];
+  const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
   const dispatch = useDispatch();
   
-  const [course, setCourse] = useState<Course>({
+  const initialCourseState: Course = {
     _id: "",
     name: "New Course",
     number: "New Number",
@@ -29,28 +31,70 @@ export default function Dashboard() {
     credits: 4,
     description: "New Description",
     image: "/images/reactjs.jpg"
-  });
-
-  const addNewCourseHandler = () => {
-    dispatch(addNewCourse(course));
   };
 
-  const deleteCourseHandler = (courseId: string) => {
-    dispatch(deleteCourse(courseId));
+  const [course, setCourse] = useState<Course>(initialCourseState);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (!currentUser) {
+        return;
+      }
+      try {
+        const courses = await client.findMyCourses();
+        dispatch(setCourses(courses));
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, [currentUser, dispatch]);
+
+  const addNewCourseHandler = async () => {
+    if (!currentUser?._id) {
+      return;
+    }
+    
+    try {
+      const createdCourse = await client.createCourse(course);
+      
+      // Dispatch addNewCourse action with the created course
+      dispatch(addNewCourse(createdCourse));
+      
+      // Create enrollment for the current user
+      const newEnrollment: Enrollment = {
+        _id: `E${Date.now()}`,
+        user: currentUser._id,
+        course: createdCourse._id,
+      };
+      
+      dispatch(addEnrollment(newEnrollment));
+      
+      // Reset the course form to initial values
+      setCourse(initialCourseState);
+    } catch (error) {
+      console.error("Error creating course:", error);
+    }
   };
 
-  const updateCourseHandler = () => {
-    dispatch(updateCourse(course));
+  const deleteCourseHandler = async (courseId: string) => {
+    try {
+      await client.deleteCourse(courseId);
+      dispatch(deleteCourse(courseId));
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
   };
 
-  // Filter courses based on user enrollment
-  const enrolledCourses = courses.filter((course) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === currentUser?._id &&
-        enrollment.course === course._id
-    )
-  );
+  const updateCourseHandler = async () => {
+    try {
+      await client.updateCourse(course);
+      dispatch(updateCourse(course));
+    } catch (error) {
+      console.error("Error updating course:", error);
+    }
+  };
 
   return (
     <div id="wd-dashboard">
@@ -88,12 +132,12 @@ export default function Dashboard() {
       />
       <hr />
       
-      <h2 id="wd-dashboard-published">Published Courses ({enrolledCourses.length})</h2>
+      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
       <hr />
       
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {enrolledCourses.map((course: Course) => (
+          {courses.map((course: Course) => (
             <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
               <Card>
                 <Link 
