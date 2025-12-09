@@ -30,14 +30,19 @@ const modulesSlice = createSlice({
   name: "modules",
   initialState,
   reducers: {
-    addModule: (state, { payload: module }: { payload: { name: string; course: string } }) => {
-      const newModule: Module = {
-        _id: uuidv4(),
-        name: module.name,
-        description: "",
-        course: module.course,
-        lessons: [],
-      };
+    setModules: (state, { payload: modules }: { payload: Module[] }) => {
+      state.modules = modules;
+    },
+    addModule: (state, { payload: module }: { payload: { name: string; course: string } | Module }) => {
+      const newModule: Module = (module as Module)._id 
+        ? (module as Module)
+        : {
+            _id: uuidv4(),
+            name: (module as { name: string; course: string }).name,
+            description: "",
+            course: (module as { name: string; course: string }).course,
+            lessons: [],
+          };
       state.modules = [...state.modules, newModule];
     },
     deleteModule: (state, { payload: moduleId }: { payload: string }) => {
@@ -56,6 +61,6 @@ const modulesSlice = createSlice({
   },
 });
 
-export const { addModule, deleteModule, updateModule, editModule } =
+export const { setModules, addModule, deleteModule, updateModule, editModule } =
   modulesSlice.actions;
 export default modulesSlice.reducer;

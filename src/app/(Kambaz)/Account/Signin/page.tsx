@@ -5,23 +5,26 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { useRouter } from "next/navigation";
-import * as db from "../../Database";
-import { User } from "../../types";
+import * as client from "../client";
 
 export default function Signin() {
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const signin = () => {
-    const user = (db.users as User[]).find(
-      (u) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
-    if (!user) return;
-    dispatch(setCurrentUser(user));
-    router.push("/Dashboard");
+  const signin = async () => {
+    try {
+      const user = await client.signin(credentials);
+      if (!user) {
+        alert("Invalid credentials");
+        return;
+      }
+      dispatch(setCurrentUser(user));
+      router.push("/Dashboard");
+    } catch (error) {
+      console.error("Error signing in:", error);
+      alert("Invalid credentials");
+    }
   };
 
   return (

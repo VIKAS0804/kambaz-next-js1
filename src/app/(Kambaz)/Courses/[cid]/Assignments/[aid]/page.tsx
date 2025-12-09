@@ -3,10 +3,11 @@
 import { useParams, useRouter } from "next/navigation";
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
 import { addAssignment, updateAssignment } from "../reducer";
+import * as client from "../../../client";
 
 interface Assignment {
   _id: string;
@@ -24,8 +25,6 @@ export default function AssignmentEditor() {
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   
-  const existingAssignment = assignments.find((a) => a._id === aid);
-  
   const [assignment, setAssignment] = useState<Omit<Assignment, "_id">>(() => {
     if (aid === "new") {
       return {
@@ -37,7 +36,12 @@ export default function AssignmentEditor() {
         points: 100,
       };
     }
-    return existingAssignment || {
+    const existingAssignment = assignments.find((a) => a._id === aid);
+    if (existingAssignment) {
+      const { _id, ...assignmentWithoutId } = existingAssignment;
+      return assignmentWithoutId;
+    }
+    return {
       title: "",
       description: "",
       course: cid as string,
@@ -47,8 +51,57 @@ export default function AssignmentEditor() {
     };
   });
 
-  if (aid !== "new" && !existingAssignment) {
-    return <div className="p-4">Assignment not found</div>;
+  const [loading, setLoading] = useState(aid !== "new");
+
+  useEffect(() => {
+    const fetchAssignment = async () => {
+      if (aid === "new") {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const courseAssignments = await client.findAssignmentsForCourse(cid as string);
+        const fetchedAssignment = courseAssignments.find((a: Assignment) => a._id === aid);
+        if (fetchedAssignment) {
+          const { _id, ...assignmentWithoutId } = fetchedAssignment;
+          setAssignment(assignmentWithoutId);
+        }
+      } catch (error) {
+        console.error("Error fetching assignment:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssignment();
+  }, [aid, cid]);
+
+  const handleSave = async () => {
+    try {
+      if (aid === "new") {
+        const createdAssignment = await client.createAssignment(cid as string, assignment);
+        dispatch(addAssignment(createdAssignment));
+      } else {
+        const updatedAssignment = { ...assignment, _id: aid as string };
+        await client.updateAssignment(aid as string, assignment);
+        dispatch(updateAssignment(updatedAssignment));
+      }
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+    }
+  };
+
+  if (loading) {
+    return <div className="p-4">Loading...</div>;
+  }
+
+  if (aid !== "new") {
+    const existingAssignment = assignments.find((a) => a._id === aid);
+    if (!existingAssignment && !loading) {
+      return <div className="p-4">Assignment not found</div>;
+    }
   }
 
   return (
@@ -224,14 +277,7 @@ export default function AssignmentEditor() {
         </Link>
         <Button 
           variant="danger"
-          onClick={() => {
-            if (aid === "new") {
-              dispatch(addAssignment(assignment));
-            } else {
-              dispatch(updateAssignment({ ...assignment, _id: aid as string }));
-            }
-            router.push(`/Courses/${cid}/Assignments`);
-          }}
+          onClick={handleSave}
         >
           Save
         </Button>

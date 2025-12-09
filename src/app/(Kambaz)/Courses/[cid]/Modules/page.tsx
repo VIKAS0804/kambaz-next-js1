@@ -7,8 +7,9 @@ import { BsGripVertical } from "react-icons/bs";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 import { useSelector, useDispatch } from "react-redux";
-import { addModule, deleteModule, updateModule, editModule } from "./reducer";
-import { useState } from "react";
+import { addModule, deleteModule, updateModule, editModule, setModules } from "./reducer";
+import { useState, useEffect } from "react";
+import * as client from "../../client";
 
 interface Lesson {
   _id: string;
@@ -38,15 +39,59 @@ export default function Modules() {
   const dispatch = useDispatch();
   const [moduleName, setModuleName] = useState("");
 
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const fetchedModules = await client.findModulesForCourse(cid as string);
+        dispatch(setModules(fetchedModules));
+      } catch (error) {
+        console.error("Error fetching modules:", error);
+      }
+    };
+
+    fetchModules();
+  }, [cid, dispatch]);
+
+  const handleAddModule = async () => {
+    try {
+      const newModule = { name: moduleName, course: cid as string };
+      const createdModule = await client.createModuleForCourse(cid as string, newModule);
+      dispatch(addModule(createdModule));
+      setModuleName("");
+    } catch (error) {
+      console.error("Error creating module:", error);
+    }
+  };
+
+  const handleDeleteModule = async (moduleId: string) => {
+    try {
+      await client.deleteModule(moduleId);
+      dispatch(deleteModule(moduleId));
+    } catch (error) {
+      console.error("Error deleting module:", error);
+    }
+  };
+
+  const handleUpdateModuleName = (module: Module, newName: string) => {
+    dispatch(updateModule({ ...module, name: newName }));
+  };
+
+  const handleFinishEditing = async (module: Module) => {
+    try {
+      const updatedModule = { ...module, editing: false };
+      await client.updateModule(updatedModule);
+      dispatch(updateModule(updatedModule));
+    } catch (error) {
+      console.error("Error finishing edit:", error);
+    }
+  };
+
   return (
     <div>
       <ModulesControls
         moduleName={moduleName}
         setModuleName={setModuleName}
-        addModule={() => {
-          dispatch(addModule({ name: moduleName, course: cid as string }));
-          setModuleName("");
-        }}
+        addModule={handleAddModule}
       />
       <br /><br /><br /><br />
       <ListGroup className="rounded-0" id="wd-modules">
@@ -65,7 +110,8 @@ export default function Modules() {
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        dispatch(updateModule({ ...module, editing: false }));
+                        handleUpdateModuleName(module, e.target.value);
+                        handleFinishEditing({ ...module, name: e.target.value });
                       }
                     }}
                     defaultValue={module.name}
@@ -73,7 +119,7 @@ export default function Modules() {
                 )}
                 <ModuleControlButtons
                   moduleId={module._id}
-                  deleteModule={(moduleId) => dispatch(deleteModule(moduleId))}
+                  deleteModule={handleDeleteModule}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
                 />
               </div>

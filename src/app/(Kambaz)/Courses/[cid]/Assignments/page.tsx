@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import AssignmentsControls from "./AssignmentsControls";
 import { BsGripVertical } from "react-icons/bs";
@@ -11,7 +12,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as client from "../../client";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -22,8 +24,26 @@ export default function Assignments() {
     (assignment) => assignment.course === cid
   );
 
-  const deleteAssignmentHandler = (assignmentId: string) => {
-    dispatch(deleteAssignment(assignmentId));
+  const fetchAssignments = async () => {
+    try {
+      const fetchedAssignments = await client.findAssignmentsForCourse(cid as string);
+      dispatch(setAssignments(fetchedAssignments));
+    } catch (error) {
+      console.error("Error fetching assignments:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [cid]);
+
+  const deleteAssignmentHandler = async (assignmentId: string) => {
+    try {
+      await client.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
   };
 
   return (
