@@ -12,12 +12,18 @@ const MODULES_API = `${HTTP_SERVER}/api/modules`;
 
 const USERS_API = `${HTTP_SERVER}/api/users`;
 
+const ENROLLMENTS_API = `${HTTP_SERVER}/api/enrollments`;
+
 // Course functions
 
 export const findMyCourses = async () => {
-  const response = await axiosWithCredentials.get(
-    `${USERS_API}/current/courses`
-  );
+  const url = `${USERS_API}/current/courses`;
+  const response = await axiosWithCredentials.get(url);
+  return response.data;
+};
+
+export const findAllCourses = async () => {
+  const response = await axiosWithCredentials.get(`${COURSES_API}`);
   return response.data;
 };
 
@@ -104,6 +110,29 @@ export const updateModule = async (module: any) => {
 export const deleteModule = async (moduleId: string) => {
   const response = await axiosWithCredentials.delete(
     `${MODULES_API}/${moduleId}`
+  );
+  return response.data;
+};
+
+// Enrollment functions
+
+export const enrollInCourse = async (courseId: string) => {
+  const response = await axiosWithCredentials.post(
+    `${ENROLLMENTS_API}/current/${courseId}`
+  );
+  return response.data;
+};
+
+export const unenrollFromCourse = async (courseId: string) => {
+  const response = await axiosWithCredentials.delete(
+    `${ENROLLMENTS_API}/current/${courseId}`
+  );
+  return response.data;
+};
+
+export const findMyEnrollments = async () => {
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}/current/enrollments`
   );
   return response.data;
 };

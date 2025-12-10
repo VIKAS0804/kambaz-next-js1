@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { useRouter } from "next/navigation";
 import { RootState, User } from "../../types";
+import * as client from "../client";
 
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
@@ -12,9 +13,15 @@ export default function Profile() {
   const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
-  const signout = () => {
-    dispatch(setCurrentUser(null));
-    router.push("/Account/Signin");
+  const signout = async () => {
+    try {
+      await client.signout();
+      dispatch(setCurrentUser(null));
+      router.push("/Account/Signin");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      alert("Error signing out. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -24,6 +31,20 @@ export default function Profile() {
       setProfile(currentUser);
     }
   }, [currentUser, router]);
+
+  const handleUpdate = async () => {
+    if (!profile) {
+      return;
+    }
+    try {
+      const updatedUser = await client.updateUser(profile);
+      dispatch(setCurrentUser(updatedUser));
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Error updating profile. Please try again.");
+    }
+  };
 
   if (!profile) return null;
 
@@ -81,6 +102,9 @@ export default function Profile() {
         <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
       </FormControl>
+      <Button onClick={handleUpdate} className="w-100 mb-2 btn-primary" id="wd-update-profile-btn">
+        Update
+      </Button>
       <Button onClick={signout} className="w-100 mb-2 btn-danger" id="wd-signout-btn">
         Sign out
       </Button>
