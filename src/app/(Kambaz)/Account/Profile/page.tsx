@@ -5,12 +5,27 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { useRouter } from "next/navigation";
 import { RootState, User } from "../../types";
+import * as client from "../client";
 
 export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+
+  const handleUpdate = async () => {
+    if (!profile) return;
+    
+    try {
+      const updatedUser = await client.updateUser(profile);
+      dispatch(setCurrentUser(updatedUser));
+      setProfile(updatedUser);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
+  };
 
   const signout = () => {
     dispatch(setCurrentUser(null));
@@ -81,6 +96,9 @@ export default function Profile() {
         <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
       </FormControl>
+      <Button onClick={handleUpdate} className="w-100 mb-2 btn-primary" id="wd-update-profile-btn">
+        Update
+      </Button>
       <Button onClick={signout} className="w-100 mb-2 btn-danger" id="wd-signout-btn">
         Sign out
       </Button>
