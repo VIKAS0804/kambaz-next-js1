@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import { Form, Row, Col, Button, Alert, Spinner } from 'react-bootstrap';
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +16,9 @@ interface Assignment {
   course: string;
   due: string;
   available: string;
+  availableUntil?: string;
+  dueDate?: string;
+  availableDate?: string;
   points: number;
 }
 
@@ -52,6 +55,20 @@ export default function AssignmentEditor() {
   });
 
   const [loading, setLoading] = useState(aid !== "new");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  console.log("=== ASSIGNMENT EDITOR LOADED ===");
+  console.log("Course ID (cid):", cid);
+  console.log("Assignment ID (aid):", aid);
+  console.log("Initial assignment state:", assignment);
+
+  // Helper function to convert ISO date to datetime-local format
+  const convertISOToDatetimeLocal = (isoString: string | undefined): string => {
+    if (!isoString) return "";
+    // Remove the Z and milliseconds, keep only YYYY-MM-DDTHH:MM
+    return isoString.slice(0, 16);
+  };
 
   useEffect(() => {
     const fetchAssignment = async () => {
@@ -64,8 +81,20 @@ export default function AssignmentEditor() {
         const courseAssignments = await client.findAssignmentsForCourse(cid as string);
         const fetchedAssignment = courseAssignments.find((a: Assignment) => a._id === aid);
         if (fetchedAssignment) {
+          console.log("=== FETCHED ASSIGNMENT FROM API ===");
+          console.log("Fetched assignment:", fetchedAssignment);
+          
           const { _id, ...assignmentWithoutId } = fetchedAssignment;
-          setAssignment(assignmentWithoutId);
+          // Convert ISO dates to datetime-local format for form inputs
+          const convertedAssignment = {
+            ...assignmentWithoutId,
+            due: assignmentWithoutId.dueDate ? convertISOToDatetimeLocal(assignmentWithoutId.dueDate) : (assignmentWithoutId.due || ""),
+            available: assignmentWithoutId.availableDate ? convertISOToDatetimeLocal(assignmentWithoutId.availableDate) : (assignmentWithoutId.available || ""),
+            availableUntil: assignmentWithoutId.availableUntil ? convertISOToDatetimeLocal(assignmentWithoutId.availableUntil) : "",
+          };
+          
+          console.log("After conversion:", convertedAssignment);
+          setAssignment(convertedAssignment);
         }
       } catch (error) {
         console.error("Error fetching assignment:", error);
@@ -78,18 +107,55 @@ export default function AssignmentEditor() {
   }, [aid, cid]);
 
   const handleSave = async () => {
+    console.log("=== SAVE BUTTON CLICKED ===");
+    console.log("Current assignment state:", assignment);
+    console.log("Assignment to save (before conversion):", assignment);
+    
+    setSaving(true);
+    setError(null);
     try {
+      // Convert dates to ISO format and handle empty strings
+      const assignmentToSave = {
+        ...assignment,
+        // Map due to dueDate (convert datetime-local to ISO)
+        dueDate: assignment.due ? new Date(assignment.due).toISOString() : undefined,
+        // Map available to availableDate (convert datetime-local to ISO)
+        availableDate: assignment.available ? new Date(assignment.available).toISOString() : undefined,
+        // Convert availableUntil to ISO format
+        availableUntil: assignment.availableUntil ? new Date(assignment.availableUntil).toISOString() : undefined,
+        // Keep legacy fields for backward compatibility
+        due: assignment.due || undefined,
+        available: assignment.available || undefined,
+      };
+
+      console.log("=== AFTER DATE CONVERSION ===");
+      console.log("Assignment to save (after conversion):", assignmentToSave);
+      console.log("Is new assignment:", aid === "new");
+
       if (aid === "new") {
-        const createdAssignment = await client.createAssignment(cid as string, assignment);
+        const createdAssignment = await client.createAssignmentForCourse(cid as string, assignmentToSave);
+        console.log("=== API CALL SUCCESS ===");
+        console.log("Created/Updated assignment:", createdAssignment);
+        console.log("About to redirect to:", `/Courses/${cid}/Assignments`);
         dispatch(addAssignment(createdAssignment));
       } else {
-        const updatedAssignment = { ...assignment, _id: aid as string };
-        await client.updateAssignment(aid as string, assignment);
+        const assignmentWithId = { ...assignmentToSave, _id: aid as string };
+        const updatedAssignment = await client.updateAssignment(assignmentWithId);
+        console.log("=== API CALL SUCCESS ===");
+        console.log("Created/Updated assignment:", updatedAssignment);
+        console.log("About to redirect to:", `/Courses/${cid}/Assignments`);
         dispatch(updateAssignment(updatedAssignment));
       }
       router.push(`/Courses/${cid}/Assignments`);
-    } catch (error) {
+    } catch (error: any) {
+      console.log("=== API CALL FAILED ===");
+      console.log("Error:", error);
+      console.log("Error response:", error?.response);
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to save assignment. Please try again.";
+      setError(errorMessage);
       console.error("Error saving assignment:", error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -106,6 +172,13 @@ export default function AssignmentEditor() {
 
   return (
     <div id="wd-assignments-editor" className="container-fluid p-3">
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError(null)} className="mb-3">
+          <Alert.Heading>Error</Alert.Heading>
+          <p>{error}</p>
+        </Alert>
+      )}
+      
       {/* Assignment Name */}
       <div className="mb-3">
         <Form.Label htmlFor="wd-name">Assignment Name</Form.Label>
@@ -228,8 +301,11 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-due-date" 
-                    value={assignment.due}
-                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
+                    value={assignment.due || ""}
+                    onChange={(e) => setAssignment({ 
+                      ...assignment, 
+                      due: e.target.value
+                    })}
                   />
                 </div>
               </Col>
@@ -244,8 +320,11 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-from" 
-                    value={assignment.available}
-                    onChange={(e) => setAssignment({ ...assignment, available: e.target.value })}
+                    value={assignment.available || ""}
+                    onChange={(e) => setAssignment({ 
+                      ...assignment, 
+                      available: e.target.value
+                    })}
                   />
                 </div>
               </Col>
@@ -257,8 +336,11 @@ export default function AssignmentEditor() {
                   <Form.Control 
                     type="datetime-local" 
                     id="wd-available-until" 
-                    value={assignment.due}
-                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
+                    value={assignment.availableUntil || ""}
+                    onChange={(e) => setAssignment({ 
+                      ...assignment, 
+                      availableUntil: e.target.value || undefined
+                    })}
                   />
                 </div>
               </Col>
@@ -278,8 +360,16 @@ export default function AssignmentEditor() {
         <Button 
           variant="danger"
           onClick={handleSave}
+          disabled={saving}
         >
-          Save
+          {saving ? (
+            <>
+              <Spinner animation="border" size="sm" className="me-2" />
+              Saving...
+            </>
+          ) : (
+            "Save"
+          )}
         </Button>
       </div>
     </div>

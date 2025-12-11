@@ -107,12 +107,12 @@ export default function Modules() {
                   <FormControl
                     className="w-50 d-inline-block"
                     onChange={(e) =>
-                      dispatch(updateModule({ ...module, name: e.target.value }))
+                      dispatch(updateModule({ ...module, name: (e.target as HTMLInputElement).value }))
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        handleUpdateModuleName(module, e.target.value);
-                        handleFinishEditing({ ...module, name: e.target.value });
+                        handleUpdateModuleName(module, (e.target as HTMLInputElement).value);
+                        handleFinishEditing({ ...module, name: (e.target as HTMLInputElement).value });
                       }
                     }}
                     defaultValue={module.name}

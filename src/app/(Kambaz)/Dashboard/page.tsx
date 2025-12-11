@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl } from "react-bootstrap";
+import { Row, Col, Card, CardImg, CardBody, CardTitle, CardText, Button, FormControl, Spinner, Alert } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse, setCourses } from "../Courses/reducer";
 import { setEnrollments, addEnrollment, deleteEnrollment } from "../Enrollments/reducer";
@@ -35,12 +35,16 @@ export default function Dashboard() {
 
   const [course, setCourse] = useState<Course>(initialCourseState);
   const [showAllCourses, setShowAllCourses] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!currentUser) {
         return;
       }
+      setLoading(true);
+      setError(null);
       try {
         // Fetch enrollments first
         const fetchedEnrollments = await client.findMyEnrollments();
@@ -56,8 +60,12 @@ export default function Dashboard() {
           const myCourses = await client.findMyCourses();
           dispatch(setCourses(myCourses));
         }
-      } catch (error) {
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.message || error?.message || "Failed to fetch data. Please try again.";
+        setError(errorMessage);
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -69,6 +77,7 @@ export default function Dashboard() {
       return;
     }
     
+    setError(null);
     try {
       const createdCourse = await client.createCourse(course);
       
@@ -86,30 +95,39 @@ export default function Dashboard() {
       
       // Reset the course form to initial values
       setCourse(initialCourseState);
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to create course. Please try again.";
+      setError(errorMessage);
       console.error("Error creating course:", error);
     }
   };
 
   const deleteCourseHandler = async (courseId: string) => {
+    setError(null);
     try {
       await client.deleteCourse(courseId);
       dispatch(deleteCourse(courseId));
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to delete course. Please try again.";
+      setError(errorMessage);
       console.error("Error deleting course:", error);
     }
   };
 
   const updateCourseHandler = async () => {
+    setError(null);
     try {
       await client.updateCourse(course);
       dispatch(updateCourse(course));
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to update course. Please try again.";
+      setError(errorMessage);
       console.error("Error updating course:", error);
     }
   };
 
   const handleEnroll = async (courseId: string) => {
+    setError(null);
     try {
       await client.enrollInCourse(courseId);
       const enrollment = await client.findMyEnrollments();
@@ -122,12 +140,15 @@ export default function Dashboard() {
         const myCourses = await client.findMyCourses();
         dispatch(setCourses(myCourses));
       }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to enroll in course. Please try again.";
+      setError(errorMessage);
       console.error("Error enrolling in course:", error);
     }
   };
 
   const handleUnenroll = async (courseId: string) => {
+    setError(null);
     try {
       await client.unenrollFromCourse(courseId);
       const enrollment = await client.findMyEnrollments();
@@ -140,7 +161,9 @@ export default function Dashboard() {
         const myCourses = await client.findMyCourses();
         dispatch(setCourses(myCourses));
       }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to unenroll from course. Please try again.";
+      setError(errorMessage);
       console.error("Error unenrolling from course:", error);
     }
   };
@@ -177,6 +200,22 @@ export default function Dashboard() {
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
+      
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError(null)}>
+          <Alert.Heading>Error</Alert.Heading>
+          <p>{error}</p>
+        </Alert>
+      )}
+      
+      {loading && (
+        <div className="text-center my-4">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-2">Loading courses...</p>
+        </div>
+      )}
       
       <h5>
         New Course
@@ -222,11 +261,12 @@ export default function Dashboard() {
       </div>
       <hr />
       
-      <div id="wd-dashboard-courses">
-        <Row xs={1} md={5} className="g-4">
-          {displayedCourses
-            .filter((course: Course) => course && course._id)
-            .map((course: Course) => (
+      {!loading && (
+        <div id="wd-dashboard-courses">
+          <Row xs={1} md={5} className="g-4">
+            {displayedCourses
+              .filter((course: Course) => course && course._id)
+              .map((course: Course) => (
             <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
               <Card>
                 <Link 
@@ -306,9 +346,10 @@ export default function Dashboard() {
                 </CardBody>
               </Card>
             </Col>
-          ))}
-        </Row>
-      </div>
+            ))}
+          </Row>
+        </div>
+      )}
     </div>
   );
 }

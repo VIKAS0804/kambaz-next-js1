@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
-import { deleteAssignment, setAssignments } from "./reducer";
+import { addAssignment, deleteAssignment, setAssignments, updateAssignment } from "./reducer";
 import * as client from "../../client";
 
 export default function Assignments() {
@@ -20,29 +20,58 @@ export default function Assignments() {
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
-  const courseAssignments = assignments.filter(
-    (assignment) => assignment.course === cid
-  );
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      console.log("=== ASSIGNMENTS LIST: Fetching assignments for course:", cid);
+      try {
+        const fetchedAssignments = await client.findAssignmentsForCourse(cid as string);
+        console.log("=== ASSIGNMENTS LIST: Fetched assignments:", fetchedAssignments);
+        dispatch(setAssignments(fetchedAssignments));
+      } catch (error) {
+        console.error("Error fetching assignments:", error);
+      }
+    };
 
-  const fetchAssignments = async () => {
+    fetchAssignments();
+  }, [cid, dispatch]);
+
+  const handleAddAssignment = async (assignment: any) => {
     try {
-      const fetchedAssignments = await client.findAssignmentsForCourse(cid as string);
-      dispatch(setAssignments(fetchedAssignments));
+      const createdAssignment = await client.createAssignmentForCourse(cid as string, assignment);
+      dispatch(addAssignment(createdAssignment));
     } catch (error) {
-      console.error("Error fetching assignments:", error);
+      console.error("Error creating assignment:", error);
     }
   };
 
-  useEffect(() => {
-    fetchAssignments();
-  }, [cid]);
-
-  const deleteAssignmentHandler = async (assignmentId: string) => {
+  const handleDeleteAssignment = async (assignmentId: string) => {
+    console.log("=== DELETE ASSIGNMENT CLICKED ===");
+    console.log("Assignment ID to delete:", assignmentId);
     try {
       await client.deleteAssignment(assignmentId);
+      console.log("=== DELETE ASSIGNMENT SUCCESS ===");
       dispatch(deleteAssignment(assignmentId));
     } catch (error) {
       console.error("Error deleting assignment:", error);
+    }
+  };
+
+  const confirmDeleteAssignment = (assignmentId: string) => {
+    console.log("=== CONFIRM DELETE DIALOG ===");
+    console.log("Assignment ID:", assignmentId);
+    const userConfirmed = window.confirm("Are you sure you want to delete this assignment?");
+    console.log("User confirmed:", userConfirmed);
+    if (userConfirmed) {
+      handleDeleteAssignment(assignmentId);
+    }
+  };
+
+  const handleSaveAssignment = async (assignment: any) => {
+    try {
+      const updatedAssignment = await client.updateAssignment(assignment);
+      dispatch(updateAssignment(updatedAssignment));
+    } catch (error) {
+      console.error("Error updating assignment:", error);
     }
   };
 
@@ -66,7 +95,7 @@ export default function Assignments() {
           </div>
           
           <ListGroup className="wd-assignments rounded-0">
-            {courseAssignments.map((assignment) => (
+            {assignments.map((assignment) => (
               <ListGroupItem 
                 key={assignment._id} 
                 className="wd-assignment p-3 ps-1 d-flex align-items-center"
@@ -93,7 +122,7 @@ export default function Assignments() {
                     <div className="d-flex align-items-center">
                       <FaTrash 
                         className="text-danger me-2 mb-1" 
-                        onClick={() => deleteAssignmentHandler(assignment._id)}
+                        onClick={() => confirmDeleteAssignment(assignment._id)}
                         style={{ cursor: "pointer" }}
                       />
                       <IoCheckmarkCircle className="text-success fs-4 me-2" />
